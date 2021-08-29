@@ -1,0 +1,15 @@
+version: '3.5'
+services:
+  user:
+    build: .
+    restart: always
+    hostname: user
+    env_file:
+      - .env
+    networks:
+      - backend
+      
+networks:
+  backend:
+    external:
+      name: cartografia-network
