@@ -1,9 +1,24 @@
 version: '3.5'
 services:
-  user:
+  user-debug:
     build: .
+    volumes: 
+      - .:/var/www/gateway
     restart: always
-    hostname: user
+    hostname: midia
+    command: npm run start:debug
+    ports: 
+      - 9228:9228
+    env_file:
+      - .env
+    networks:
+      - backend
+  user-dev:
+    build: .
+    volumes: 
+      - .:/var/www/gateway
+    restart: always
+    hostname: midia
     env_file:
       - .env
     networks:
