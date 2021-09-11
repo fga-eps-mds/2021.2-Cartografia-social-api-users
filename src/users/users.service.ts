@@ -1,7 +1,7 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { MicrosserviceException } from 'src/exceptions/MicrosserviceException';
+import { MicrosserviceException } from '../exceptions/MicrosserviceException';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User, UserDocument, UserEnum } from './entities/user.entity';
 
@@ -13,6 +13,10 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<string> {
+    // ...
+
+    delete createUserDto.password;
+
     const user = new this.userModel({
       ...createUserDto,
       type: UserEnum.RESEARCHER,
