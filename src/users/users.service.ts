@@ -1,26 +1,39 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { MicrosserviceException } from 'src/exceptions/MicrosserviceException';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { User, UserDocument, UserEnum } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
-  create(createUserDto: CreateUserDto) {
-    return `This action adds a new user ${createUserDto}`;
-  }
+  constructor(
+    @InjectModel(User.name)
+    private userModel: Model<UserDocument>,
+  ) {}
 
-  findAll() {
-    return `This action returns all users`;
-  }
+  async create(createUserDto: CreateUserDto): Promise<string> {
+    const user = new this.userModel({
+      ...createUserDto,
+      type: UserEnum.RESEARCHER,
+    });
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
+    try {
+      const result = await user.save();
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id}, ${updateUserDto} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+      return result.id;
+    } catch (error) {
+      if (error.name === 'MongoError') {
+        if (error.message.includes('duplicate key')) {
+          const atributeKey = Object.keys(error.keyValue)[0];
+          throw new MicrosserviceException(
+            `${atributeKey} já cadastrado!`,
+            HttpStatus.CONFLICT,
+          );
+        }
+      } else {
+        throw new MicrosserviceException(error.message, HttpStatus.BAD_REQUEST);
+      }
+    }
   }
 }
