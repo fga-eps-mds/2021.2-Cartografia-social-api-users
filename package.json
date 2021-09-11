@@ -30,6 +30,7 @@
     "@nestjs/platform-express": "^8.0.0",
     "amqp-connection-manager": "^3.6.0",
     "amqplib": "^0.8.0",
+    "mongodb": "^3.6.11",
     "mongoose": "^5.13.9",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
@@ -71,6 +72,15 @@
     },
     "collectCoverageFrom": [
       "**/*.(t|j)s"
+    ],
+    "coveragePathIgnorePatterns": [
+      "/dist/",
+      "/test/",
+      ".*\\.module\\.ts$",
+      ".eslintrc.js",
+      "/src/main.ts",
+      "/src/config/configuration.ts",
+      "/coverage/"
     ],
     "coverageDirectory": "./coverage",
     "testEnvironment": "node"
