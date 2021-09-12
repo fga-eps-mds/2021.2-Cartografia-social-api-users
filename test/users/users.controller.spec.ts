@@ -7,6 +7,13 @@ import { UsersService } from '../../src/users/users.service';
 
 describe('UsersController', () => {
   let controller: UsersController;
+  const id = {
+    id: '123',
+  };
+
+  const saveFunction = {
+    save: async () => Promise.resolve(id),
+  };
 
   const dynamicModule = (fn: any) => {
     return Test.createTestingModule({
@@ -37,17 +44,8 @@ describe('UsersController', () => {
   });
 
   it('should create a community member', async () => {
-    const id = {
-      id: '123',
-    };
-
     const module: TestingModule = await dynamicModule(
-      jest.fn(() => ({
-        save: async () =>
-          new Promise((resolve) => {
-            resolve(id);
-          }),
-      })),
+      jest.fn(() => saveFunction),
     );
 
     controller = module.get<UsersController>(UsersController);
@@ -63,17 +61,8 @@ describe('UsersController', () => {
   });
 
   it('should create a researcher', async () => {
-    const id = {
-      id: '123',
-    };
-
     const module: TestingModule = await dynamicModule(
-      jest.fn(() => ({
-        save: async () =>
-          new Promise((resolve) => {
-            resolve(id);
-          }),
-      })),
+      jest.fn(() => saveFunction),
     );
 
     controller = module.get<UsersController>(UsersController);
@@ -91,15 +80,13 @@ describe('UsersController', () => {
   it('should get user data', async () => {
     const module: TestingModule = await dynamicModule({
       findOne: async () =>
-        new Promise((resolve) => {
-          resolve({
-            toJSON: () => ({
-              id: '123',
-              email: 'email@gmail.com',
-              name: 'Example',
-              cellPhone: '61992989898',
-            }),
-          });
+        Promise.resolve({
+          toJSON: () => ({
+            id: '123',
+            email: 'email@gmail.com',
+            name: 'Example',
+            cellPhone: '61992989898',
+          }),
         }),
     });
 

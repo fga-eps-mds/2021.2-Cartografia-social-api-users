@@ -22,29 +22,23 @@ describe('FirebaseAuth', () => {
     // Complete firebase-admin mocks
     admin.initializeApp = jest.fn().mockReturnValue({
       auth: () => ({
-        createUser: jest.fn(
-          () =>
-            new Promise((resolve) => {
-              resolve({
-                uid: '123',
-                emailVerified: false,
-                disabled: false,
-                metadata: null,
-                providerData: null,
-                toJSON: jest.fn(),
-              });
-            }),
+        createUser: jest.fn(() =>
+          Promise.resolve({
+            uid: '123',
+            emailVerified: false,
+            disabled: false,
+            metadata: null,
+            providerData: null,
+            toJSON: jest.fn(),
+          }),
         ),
-        getUserByEmail: jest.fn(
-          () =>
-            new Promise((resolve) => {
-              resolve({
-                uid: '123',
-                email: 'email@gmail.com',
-                name: 'Example',
-                cellPhone: '61992989898',
-              });
-            }),
+        getUserByEmail: jest.fn(() =>
+          Promise.resolve({
+            uid: '123',
+            email: 'email@gmail.com',
+            name: 'Example',
+            cellPhone: '61992989898',
+          }),
         ),
         deleteUser: jest.fn(() => Promise.resolve()),
         setCustomUserClaims: jest.fn(() => Promise.resolve()),

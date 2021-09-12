@@ -1,5 +1,6 @@
 import { getModelToken } from '@nestjs/mongoose';
 import { Test } from '@nestjs/testing';
+import { randomUUID } from 'crypto';
 import { MongoError } from 'mongodb';
 import { FirebaseAuth } from '../../src/commons/auth/firebase';
 import { MicrosserviceException } from '../../src/commons/exceptions/MicrosserviceException';
@@ -8,6 +9,7 @@ import { UsersService } from '../../src/users/users.service';
 
 describe('UsersService', () => {
   let service: UsersService;
+  const password = randomUUID();
 
   const id = '123';
   function mockPointModel(dto: any) {
@@ -62,7 +64,7 @@ describe('UsersService', () => {
           email: 'email@gmail.com',
           name: 'Example',
           cellPhone: '61992989898',
-          password: '12345678',
+          password: password,
         },
         UserEnum.RESEARCHER,
       ),
@@ -88,7 +90,7 @@ describe('UsersService', () => {
           email: 'email@gmail.com',
           name: 'Example',
           cellPhone: '61992989898',
-          password: '12345678',
+          password: password,
         },
         UserEnum.RESEARCHER,
       );
