@@ -1,10 +1,23 @@
 import { FirebaseAuth } from '../../../src/commons/auth/firebase';
 import admin from 'firebase-admin';
 import { UserEnum } from '../../../src/users/entities/user.entity';
+import { Test, TestingModule } from '@nestjs/testing';
+import { ConfigService } from '../../../src/config/configuration';
 
 jest.mock('firebase-admin');
 
 describe('FirebaseAuth', () => {
+  const dynamicModule = () => {
+    return Test.createTestingModule({
+      providers: [
+        FirebaseAuth,
+        {
+          provide: 'CONFIG',
+          useClass: ConfigService,
+        },
+      ],
+    }).compile();
+  };
   beforeEach(() => {
     // Complete firebase-admin mocks
     admin.initializeApp = jest.fn().mockReturnValue({
@@ -39,13 +52,17 @@ describe('FirebaseAuth', () => {
     });
   });
 
-  it('should be defined', () => {
-    const firebaseAuth = new FirebaseAuth();
+  it('should be defined', async () => {
+    const module: TestingModule = await dynamicModule();
+    const firebaseAuth = module.get<FirebaseAuth>(FirebaseAuth);
+
     expect(firebaseAuth).toBeDefined();
   });
 
   it('should createUser', async () => {
-    const firebaseAuth = new FirebaseAuth();
+    const module: TestingModule = await dynamicModule();
+    const firebaseAuth = module.get<FirebaseAuth>(FirebaseAuth);
+
     const result = await firebaseAuth.createUser({
       email: 'email@gmail.com',
       name: 'Example',
@@ -57,7 +74,9 @@ describe('FirebaseAuth', () => {
   });
 
   it('should createUser with random password', async () => {
-    const firebaseAuth = new FirebaseAuth();
+    const module: TestingModule = await dynamicModule();
+    const firebaseAuth = module.get<FirebaseAuth>(FirebaseAuth);
+
     const result = await firebaseAuth.createUser({
       email: 'email@gmail.com',
       name: 'Example',
@@ -68,7 +87,9 @@ describe('FirebaseAuth', () => {
   });
 
   it('should getUserByEmail', async () => {
-    const firebaseAuth = new FirebaseAuth();
+    const module: TestingModule = await dynamicModule();
+    const firebaseAuth = module.get<FirebaseAuth>(FirebaseAuth);
+
     const result = await firebaseAuth.getUserByEmail('email@gmail.com');
 
     expect(result).toStrictEqual({
@@ -80,7 +101,8 @@ describe('FirebaseAuth', () => {
   });
 
   it('should deleteUserByEmail', async () => {
-    const firebaseAuth = new FirebaseAuth();
+    const module: TestingModule = await dynamicModule();
+    const firebaseAuth = module.get<FirebaseAuth>(FirebaseAuth);
 
     let expectThisToBeTrue = false;
 
@@ -95,7 +117,8 @@ describe('FirebaseAuth', () => {
   });
 
   it('should setUserRole', async () => {
-    const firebaseAuth = new FirebaseAuth();
+    const module: TestingModule = await dynamicModule();
+    const firebaseAuth = module.get<FirebaseAuth>(FirebaseAuth);
 
     let expectThisToBeTrue = false;
     try {
