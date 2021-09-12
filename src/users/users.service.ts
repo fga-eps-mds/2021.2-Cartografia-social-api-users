@@ -1,7 +1,7 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { FirebaseAuth } from 'src/commons/auth/firebase';
+import { FirebaseAuth } from '../commons/auth/firebase';
 import { MicrosserviceException } from '../commons/exceptions/MicrosserviceException';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User, UserDocument, UserEnum } from './entities/user.entity';

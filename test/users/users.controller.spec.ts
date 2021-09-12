@@ -1,5 +1,6 @@
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
+import { FirebaseAuth } from '../../src/commons/auth/firebase';
 import { User } from '../../src/users/entities/user.entity';
 import { UsersController } from '../../src/users/users.controller';
 import { UsersService } from '../../src/users/users.service';
@@ -16,6 +17,14 @@ describe('UsersController', () => {
           provide: getModelToken(User.name),
           useValue: fn,
         },
+        {
+          provide: FirebaseAuth,
+          useValue: {
+            createUser: jest.fn(() => ({ uid: '123' })),
+            setUserRole: jest.fn(),
+            deleteUser: jest.fn(),
+          },
+        },
       ],
     }).compile();
   };
@@ -27,7 +36,7 @@ describe('UsersController', () => {
     expect(controller).toBeDefined();
   });
 
-  it('should create a user', async () => {
+  it('should create a community member', async () => {
     const id = {
       id: '123',
     };
@@ -44,12 +53,63 @@ describe('UsersController', () => {
     controller = module.get<UsersController>(UsersController);
 
     expect(
-      await controller.create({
+      await controller.createCommunityMember({
         email: 'email@gmail.com',
         name: 'Example',
         cellPhone: '61992989898',
         password: '12345678',
       }),
     ).toStrictEqual(id);
+  });
+
+  it('should create a researcher', async () => {
+    const id = {
+      id: '123',
+    };
+
+    const module: TestingModule = await dynamicModule(
+      jest.fn(() => ({
+        save: async () =>
+          new Promise((resolve) => {
+            resolve(id);
+          }),
+      })),
+    );
+
+    controller = module.get<UsersController>(UsersController);
+
+    expect(
+      await controller.createResearcher({
+        email: 'email@gmail.com',
+        name: 'Example',
+        cellPhone: '61992989898',
+        password: '12345678',
+      }),
+    ).toStrictEqual(id);
+  });
+
+  it('should get user data', async () => {
+    const module: TestingModule = await dynamicModule({
+      findOne: async () =>
+        new Promise((resolve) => {
+          resolve({
+            toJSON: () => ({
+              id: '123',
+              email: 'email@gmail.com',
+              name: 'Example',
+              cellPhone: '61992989898',
+            }),
+          });
+        }),
+    });
+
+    controller = module.get<UsersController>(UsersController);
+
+    expect(await controller.getUserData('email@gmail.com')).toStrictEqual({
+      id: '123',
+      email: 'email@gmail.com',
+      name: 'Example',
+      cellPhone: '61992989898',
+    });
   });
 });

@@ -1,8 +1,9 @@
 import { getModelToken } from '@nestjs/mongoose';
 import { Test } from '@nestjs/testing';
 import { MongoError } from 'mongodb';
-import { MicrosserviceException } from '../../src/exceptions/MicrosserviceException';
-import { User } from '../../src/users/entities/user.entity';
+import { FirebaseAuth } from '../../src/commons/auth/firebase';
+import { MicrosserviceException } from '../../src/commons/exceptions/MicrosserviceException';
+import { User, UserEnum } from '../../src/users/entities/user.entity';
 import { UsersService } from '../../src/users/users.service';
 
 describe('UsersService', () => {
@@ -17,13 +18,26 @@ describe('UsersService', () => {
     };
   }
 
-  const dynamicModule = (fn: any) => {
+  const defaultFirebaseImplementation = {
+    createUser: jest.fn(() => ({ uid: '123' })),
+    setUserRole: jest.fn(),
+    deleteUser: jest.fn(),
+  };
+
+  const dynamicModule = (
+    fn: any,
+    firebaseFn: any = defaultFirebaseImplementation,
+  ) => {
     return Test.createTestingModule({
       providers: [
         UsersService,
         {
           provide: getModelToken(User.name),
           useValue: fn,
+        },
+        {
+          provide: FirebaseAuth,
+          useValue: firebaseFn,
         },
       ],
     }).compile();
@@ -43,12 +57,15 @@ describe('UsersService', () => {
     service = module.get<UsersService>(UsersService);
 
     expect(
-      await service.create({
-        email: 'email@gmail.com',
-        name: 'Example',
-        cellPhone: '61992989898',
-        password: '12345678',
-      }),
+      await service.create(
+        {
+          email: 'email@gmail.com',
+          name: 'Example',
+          cellPhone: '61992989898',
+          password: '12345678',
+        },
+        UserEnum.RESEARCHER,
+      ),
     ).toBe(id);
   });
 
@@ -66,12 +83,47 @@ describe('UsersService', () => {
     service = module.get<UsersService>(UsersService);
 
     try {
-      await service.create({
+      await service.create(
+        {
+          email: 'email@gmail.com',
+          name: 'Example',
+          cellPhone: '61992989898',
+          password: '12345678',
+        },
+        UserEnum.RESEARCHER,
+      );
+    } catch (error) {
+      expect(error).toBeInstanceOf(MicrosserviceException);
+    }
+  });
+
+  it('should get a user by email', async () => {
+    const module = await dynamicModule({
+      findOne: () => ({
         email: 'email@gmail.com',
         name: 'Example',
         cellPhone: '61992989898',
-        password: '12345678',
-      });
+      }),
+    });
+
+    service = module.get<UsersService>(UsersService);
+
+    expect(await service.getUserByEmail('email@gmail.com')).toStrictEqual({
+      email: 'email@gmail.com',
+      name: 'Example',
+      cellPhone: '61992989898',
+    });
+  });
+
+  it('should not find a user by email', async () => {
+    const module = await dynamicModule({
+      findOne: () => null,
+    });
+
+    service = module.get<UsersService>(UsersService);
+
+    try {
+      await service.getUserByEmail('email@gmail.com');
     } catch (error) {
       expect(error).toBeInstanceOf(MicrosserviceException);
     }
