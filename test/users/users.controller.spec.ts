@@ -1,5 +1,6 @@
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
+import { randomUUID } from 'crypto';
 import { FirebaseAuth } from '../../src/commons/auth/firebase';
 import { User } from '../../src/users/entities/user.entity';
 import { UsersController } from '../../src/users/users.controller';
@@ -10,6 +11,8 @@ describe('UsersController', () => {
   const id = {
     id: '123',
   };
+
+  const password = randomUUID();
 
   const saveFunction = {
     save: async () => Promise.resolve(id),
@@ -55,7 +58,7 @@ describe('UsersController', () => {
         email: 'email@gmail.com',
         name: 'Example',
         cellPhone: '61992989898',
-        password: '12345678',
+        password: password,
       }),
     ).toStrictEqual(id);
   });
@@ -72,7 +75,7 @@ describe('UsersController', () => {
         email: 'email@gmail.com',
         name: 'Example',
         cellPhone: '61992989898',
-        password: '12345678',
+        password: password,
       }),
     ).toStrictEqual(id);
   });

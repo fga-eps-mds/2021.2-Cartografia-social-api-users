@@ -3,10 +3,13 @@ import admin from 'firebase-admin';
 import { UserEnum } from '../../../src/users/entities/user.entity';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '../../../src/config/configuration';
+import { randomUUID } from 'crypto';
 
 jest.mock('firebase-admin');
 
 describe('FirebaseAuth', () => {
+  const password = randomUUID();
+
   const dynamicModule = () => {
     return Test.createTestingModule({
       providers: [
@@ -61,7 +64,7 @@ describe('FirebaseAuth', () => {
       email: 'email@gmail.com',
       name: 'Example',
       cellPhone: '61992989898',
-      password: '12345678',
+      password: password,
     });
 
     expect(result.uid).toBe('123');
