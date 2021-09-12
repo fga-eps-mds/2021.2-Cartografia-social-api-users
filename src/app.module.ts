@@ -6,9 +6,13 @@ import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ envFilePath: ['.env', '.env.firebase'] }),
+    ConfigModule.forRoot({
+      envFilePath: ['.firebase.env'],
+      isGlobal: true,
+    }),
     MongooseModule.forRoot(new ConfigService().get('mongo').url),
     UsersModule,
   ],
+  providers: [ConfigService],
 })
 export class AppModule {}

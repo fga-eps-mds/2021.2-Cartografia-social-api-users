@@ -1,14 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { ConfigService } from '../../config/configuration';
 import { randomUUID } from 'crypto';
 import admin from 'firebase-admin';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
-import firebaseConfig from '../../config/config.firebase';
 
 @Injectable()
 export class FirebaseAuth {
   private firebaseApp: admin.app.App;
 
-  constructor() {
+  constructor(@Inject('CONFIG') config: ConfigService) {
+    const firebaseConfig = config.get('firebase');
+
     this.firebaseApp = admin.initializeApp({
       credential: admin.credential.cert(firebaseConfig),
     });

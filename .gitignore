@@ -38,4 +38,4 @@ lerna-debug.log*
 /deploy/**/*.env.*
 
 # firebase config file
-.env.firebase
+.*.env
