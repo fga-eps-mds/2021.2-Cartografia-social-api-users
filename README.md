@@ -22,6 +22,8 @@ Para a execução local do projeto serão necessárias as seguintes dependência
 * [NodeJs](https://nodejs.org/en/)
 * [VSCode](https://code.visualstudio.com/) (Opcional)
 
+Obs.: É necessário também possuir um arquivo de configuração do firebase. Esse arquivo deve estar na pasta src/config/*.firebase.(js|ts) e exportar um json com os valores de configuração do firebase. __Sem esse aquivo seu projeto não irá funcionar!!!!__
+
 ## [**Execução**](#Sumário)
 
 ### Installation
