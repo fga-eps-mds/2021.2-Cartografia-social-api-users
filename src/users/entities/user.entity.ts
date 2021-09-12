@@ -14,6 +14,9 @@ export class User {
   @Prop({ required: true })
   name: string;
 
+  @Prop()
+  uid: string;
+
   @Prop({ required: true, unique: true })
   cellPhone: string;
 
@@ -28,3 +31,16 @@ export class User {
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
+
+UserSchema.virtual('id').get(function () {
+  return this._id.toHexString();
+});
+
+UserSchema.set('toJSON', {
+  virtuals: true,
+  transform: function (doc, ret) {
+    delete ret._id;
+    delete ret.__v;
+    ret.type = UserEnum[ret.type];
+  },
+});
