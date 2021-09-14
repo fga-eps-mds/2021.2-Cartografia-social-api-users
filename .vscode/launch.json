@@ -16,6 +16,18 @@
             "outFiles": [
                 "${workspaceFolder}/dist/**/*.js"
             ]
+        },
+        {
+            "type": "node",
+            "request": "attach",
+            "name": "Debug: nestjs",
+            "remoteRoot": "/var/www/gateway",
+            "localRoot": "${workspaceFolder}",
+            "protocol": "inspector",
+            "port": 9226,
+            "restart": true,
+            "address": "0.0.0.0",
+            "skipFiles": ["<node_internals>/**"]
         }
     ]
 }

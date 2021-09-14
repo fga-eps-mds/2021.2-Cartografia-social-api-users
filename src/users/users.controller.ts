@@ -2,34 +2,36 @@ import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { UserEnum } from './entities/user.entity';
 
 @Controller()
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @MessagePattern('createUser')
-  create(@Payload() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  @MessagePattern('createResearcher')
+  async createResearcher(@Payload() createUserDto: CreateUserDto) {
+    const id = await this.usersService.create(
+      createUserDto,
+      UserEnum.RESEARCHER,
+    );
+
+    return { id };
   }
 
-  @MessagePattern('findAllUsers')
-  findAll() {
-    return this.usersService.findAll();
+  @MessagePattern('createCommunityMember')
+  async createCommunityMember(@Payload() createUserDto: CreateUserDto) {
+    const id = await this.usersService.create(
+      createUserDto,
+      UserEnum.COMMUNITY_MEMBER,
+    );
+
+    return { id };
   }
 
-  @MessagePattern('findOneUser')
-  findOne(@Payload() id: number) {
-    return this.usersService.findOne(id);
-  }
+  @MessagePattern('getUserData')
+  async getUserData(@Payload() email: string) {
+    const response = await this.usersService.getUserByEmail(email);
 
-  @MessagePattern('updateUser')
-  update(@Payload() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(updateUserDto.id, updateUserDto);
-  }
-
-  @MessagePattern('removeUser')
-  remove(@Payload() id: number) {
-    return this.usersService.remove(id);
+    return response.toJSON();
   }
 }
