@@ -19,30 +19,36 @@ Repositório do microsserviço de usuários do projeto da Cartografia social
 
 Para a execução local do projeto serão necessárias as seguintes dependências:
 
-* [NodeJs](https://nodejs.org/en/)
-* [VSCode](https://code.visualstudio.com/) (Opcional)
+* [Npm](https://docs.npmjs.com/getting-started)
+* [Docker Compose](https://docs.docker.com/compose/install/)
 
 Obs.: É necessário também possuir um arquivo de configuração do firebase. Esse arquivo deve estar na pasta src/config/*.firebase.(js|ts) e exportar um json com os valores de configuração do firebase. __Sem esse aquivo seu projeto não irá funcionar!!!!__
 
 ## [**Execução**](#Sumário)
-
-### Installation
+### Faça um clone do repositório
 
 ```bash
+$ git clone https://github.com/fga-eps-mds/2021.1-Cartografia-social-api-users
+```
+
+### Instalando as dependências e Configurando variáveis de ambiente
+
+```bash
+$ cd 2021.1-Cartografia-social-api-users
 $ npm install
 ```
 
-### Running the app
+Crie um projeto no [firebase](https://firebase.google.com/docs/android/setup?hl=pt) e crie um arquivo '.firebase.env.' no diretório raiz. Se baseie no arquivo '.firebase.env.example' para o preenchimento das configurações.
+
+### Executando a aplicação
+Escolha um dos ambientes para a execução
 
 ```bash
-# development
-$ npm run start
+# development ambient
+$ docker-compose up user-dev
 
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+# debug ambient
+$ docker-compose up user-debug
 ```
 
 ### Test
