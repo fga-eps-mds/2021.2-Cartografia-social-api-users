@@ -47,7 +47,7 @@ jobs:
         username: ${{ secrets.SSH_USER }}
         password: ${{ secrets.SSH_PASSWORD }}
         script: |
-          cd projects/2021.1-Cartografia-social-api-users
+          cd projects/2021.2-Cartografia-social-api-users
           docker-compose -f deploy/hom/docker-compose.yml down
           git checkout develop
           git pull origin develop -f
@@ -66,7 +66,7 @@ jobs:
         username: ${{ secrets.SSH_USER_PROD }}
         password: ${{ secrets.SSH_PASSWORD_PROD }}
         script: |
-          cd projects/2021.1-Cartografia-social-api-users
+          cd projects/2021.2-Cartografia-social-api-users
           docker-compose -f deploy/prod/docker-compose.yml down
           git checkout main
           git pull origin main -f
