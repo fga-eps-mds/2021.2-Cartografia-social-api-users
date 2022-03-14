@@ -29,8 +29,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
       - name: Coveralls
         uses: coverallsapp/github-action@master
         with:
