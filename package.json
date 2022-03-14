@@ -53,6 +53,7 @@
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-unused-imports": "^1.1.4",
     "jest": "^27.0.6",
+    "jest-sonar": "^0.2.12",
     "prettier": "^2.3.2",
     "supertest": "^6.1.3",
     "ts-jest": "^27.0.3",
@@ -86,7 +87,18 @@
       "/coverage/"
     ],
     "testEnvironment": "node",
-    "testResultsProcessor": "jest-sonar-reporter",
-    "coverageDirectory": "./coverage"
+    "coverageDirectory": "./coverage",
+    "reporters": [
+      "default",
+      [
+        "jest-sonar",
+        {
+          "outputDirectory": "coverage",
+          "outputName": "jest-report.xml",
+          "reportedFilePath": "relative",
+          "relativeRootDir": "<rootDir>/../"
+        }
+      ]
+    ]
   }
 }
