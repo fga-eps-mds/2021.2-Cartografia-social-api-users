@@ -86,6 +86,7 @@
       "/coverage/"
     ],
     "testEnvironment": "node",
-    "testResultsProcessor": "jest-sonar-reporter"
+    "testResultsProcessor": "jest-sonar-reporter",
+    "coverageDirectory": "./coverage"
   }
 }
