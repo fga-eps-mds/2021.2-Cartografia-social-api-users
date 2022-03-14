@@ -67,6 +67,7 @@
       "json",
       "ts"
     ],
+    "collectCoverage": true,
     "rootDir": "./",
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
@@ -84,8 +85,8 @@
       "/src/config/configuration.ts",
       "/coverage/"
     ],
-    "coverageDirectory": "./coverage",
     "testEnvironment": "node",
-    "testResultsProcessor": "jest-sonar-reporter"
+    "testResultsProcessor": "jest-sonar-reporter",
+    "coverageDirectory": "./coverage"
   }
 }
