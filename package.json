@@ -31,6 +31,7 @@
     "amqp-connection-manager": "^3.6.0",
     "amqplib": "^0.8.0",
     "firebase-admin": "^9.11.1",
+    "jest-sonar-reporter": "^2.0.0",
     "mongodb": "^3.6.11",
     "mongoose": "^5.13.9",
     "reflect-metadata": "^0.1.13",
@@ -84,6 +85,7 @@
       "/coverage/"
     ],
     "coverageDirectory": "./coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "testResultsProcessor": "jest-sonar-reporter"
   }
 }
