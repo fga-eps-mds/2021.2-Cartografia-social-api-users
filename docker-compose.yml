@@ -6,7 +6,7 @@ services:
       - .:/var/www/gateway
       - /var/www/gateway/node_modules
     restart: always
-    hostname: midia
+    hostname: user
     command: npm run start:debug
     ports: 
       - 9226:9226
@@ -20,8 +20,21 @@ services:
       - .:/var/www/gateway
       - /var/www/gateway/node_modules
     restart: always
-    hostname: midia
+    hostname: user
     command: npm run start:dev
+    env_file:
+      - .env
+    networks:
+      - backend
+
+  user-prod:
+    build: .
+    volumes: 
+      - .:/var/www/gateway
+      - /var/www/gateway/node_modules
+    restart: always
+    hostname: user
+    command: npm run start:prod
     env_file:
       - .env
     networks:
