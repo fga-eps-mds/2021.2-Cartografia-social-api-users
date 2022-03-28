@@ -3,6 +3,8 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserEnum } from './entities/user.entity';
+import { NOMEM } from 'dns';
+import { CreateNonValidatedUserDto } from './dto/create-non-validated-user.dto';
 
 @Controller()
 export class UsersController {
@@ -16,6 +18,16 @@ export class UsersController {
     );
 
     return { id };
+  }
+
+  @MessagePattern('createUser')
+  async createUser() {
+    /*const id = await this.usersService.createNonValidated(
+      createNonValidatedUserDto,
+      UserEnum.NON_VALIDATED,
+    );*/
+
+    return "Service OK!";
   }
 
   @MessagePattern('createCommunityMember')

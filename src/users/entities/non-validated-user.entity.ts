@@ -7,7 +7,6 @@ export enum UserEnum {
   RESEARCHER,
   COMMUNITY_MEMBER,
   ADMIN,
-  NON_VALIDATED,
 }
 
 @Schema()
@@ -27,14 +26,8 @@ export class User {
   @Prop()
   imageUrl?: string;
 
-  @Prop({ enum: UserEnum, required: true })
+  @Prop({ enum: UserEnum, required: false })
   type: string;
-
-  @Prop({ required: false })
-  justification: string;
-
-  @Prop({ required: false })
-  community: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
