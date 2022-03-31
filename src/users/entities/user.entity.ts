@@ -34,6 +34,9 @@ export class User {
   justification: string;
 
   @Prop({ required: false })
+  affiliation: string;
+
+  @Prop({ required: false })
   community: string;
 }
 

@@ -21,13 +21,13 @@ export class UsersController {
   }
 
   @MessagePattern('createUser')
-  async createUser() {
-    /*const id = await this.usersService.createNonValidated(
+  async createUser(@Payload() createNonValidatedUserDto: CreateNonValidatedUserDto) {
+    const id = await this.usersService.createNonValidated(
       createNonValidatedUserDto,
       UserEnum.NON_VALIDATED,
-    );*/
+    );
 
-    return "Service OK!";
+    return createNonValidatedUserDto;
   }
 
   @MessagePattern('createCommunityMember')
