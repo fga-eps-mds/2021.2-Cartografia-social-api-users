@@ -3,7 +3,7 @@ export class CreateNonValidatedUserDto {
     email: string;
     cellPhone: string;
     password?: string;
-    justification: string;
+    role: string;
     affiliation: string;
     community: string;
 }

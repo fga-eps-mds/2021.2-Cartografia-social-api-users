@@ -19,13 +19,13 @@ export class UsersController {
 
     return { id };
   }
-
+  
   @MessagePattern('createUser')
   async createUser(@Payload() createNonValidatedUserDto: CreateNonValidatedUserDto) {
     const id = await this.usersService.createNonValidated(
-      createNonValidatedUserDto,
+      createNonValidatedUserDto, 
       UserEnum.NON_VALIDATED,
-    );
+      );
 
     return createNonValidatedUserDto;
   }
