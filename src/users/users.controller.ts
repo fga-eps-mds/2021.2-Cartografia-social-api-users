@@ -25,9 +25,9 @@ export class UsersController {
     const id = await this.usersService.createNonValidated(
       createNonValidatedUserDto, 
       UserEnum.NON_VALIDATED,
-      );
+    );
 
-    return createNonValidatedUserDto;
+    return id;
   }
 
   @MessagePattern('createCommunityMember')
@@ -46,4 +46,24 @@ export class UsersController {
 
     return response.toJSON();
   }
+
+  @MessagePattern('getUserData')
+  async getNonUsersData(@Payload() validated: boolean) {
+    const response = await this.usersService.getNonValidatedUsers(validated);
+
+    return response.toJSON();
+  }
+
+  // TENTANDO FAZER A FUNÇÃO DE FINALIZAR O CADASTRO DO USUÁRIO
+
+  // @MessagePattern('validatedUser')
+  // async validatedUser(@Payload() createNonValidatedUserDto: CreateNonValidatedUserDto, email: string) {
+  //   const id = await this.usersService.validatingUser(
+  //     createNonValidatedUserDto,
+  //     email,
+  //     UserEnum.NON_VALIDATED,
+  //   );
+
+  //   return id;
+  // }
 }

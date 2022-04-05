@@ -30,6 +30,9 @@ export class User {
   @Prop({ enum: UserEnum, required: true })
   type: string;
 
+  @Prop({ required: true })
+  validated: boolean;
+
   @Prop({ required: false })
   justification: string;
 

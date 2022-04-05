@@ -64,17 +64,6 @@ export class UsersService {
     });
 
     try {
-      /*const firebaseUser = await this.firebaseInstance.createUser(
-        createNonValidatedUserDto,
-      );
-
-      user.uid = firebaseUser.uid;
-
-      await this.firebaseInstance.setUserRole(user.uid, UserEnum[userType]);
-
-      const result = await user.save();
-
-      return result.id;*/
       return createNonValidatedUserDto;
     } catch (error) {
       if (error.name === 'MongoError') {
@@ -104,4 +93,56 @@ export class UsersService {
 
     return user;
   }
+
+  async getNonValidatedUsers(validated: boolean) {
+    const NonValidatedUsers = await this.userModel.find({ validated });
+
+    if (!NonValidatedUsers)
+      throw new MicrosserviceException(
+        'Nenhum usuário encontrado',
+        HttpStatus.NOT_FOUND,
+      );
+
+    return NonValidatedUsers;
+  }
+
+  // TENTANDO FAZER A FUNÇÃO DE FINALIZAR O CADASTRO DO USUÁRIO
+
+  // async validatingUser(
+  //   CreateNonValidatedUserDto: CreateNonValidatedUserDto,
+  //   email: string,
+  //   userType: UserEnum,
+  // ){
+
+  //   const user = this.getUserByEmail(email);
+
+  //   try {
+  //     const firebaseUser = await this.firebaseInstance.createNonValidatedUser(
+  //       CreateNonValidatedUserDto,
+  //     );
+
+  //     user.uid = firebaseUser.uid;
+
+  //     await this.firebaseInstance.setUserRole(user.uid, UserEnum[userType]);
+
+  //     const result = await user.save();
+
+  //     return result.id;
+  //   } catch (error) {
+  //     if (error.name === 'MongoError') {
+  //       if (error.message.includes('duplicate key')) {
+  //         const atributeKey = Object.keys(error.keyValue)[0];
+  //         throw new MicrosserviceException(
+  //           `${atributeKey} já cadastrado!`,
+  //           HttpStatus.CONFLICT,
+  //         );
+  //       }
+
+  //       await this.firebaseInstance.deleteUser(user.uid).catch(null);
+  //     } else {
+  //       throw new MicrosserviceException(error.message, HttpStatus.BAD_REQUEST);
+  //     }
+  //   }
+  // }
+
 }
