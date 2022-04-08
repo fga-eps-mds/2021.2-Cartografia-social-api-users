@@ -3,7 +3,6 @@ import { ConfigService } from '../../config/configuration';
 import { randomUUID } from 'crypto';
 import admin from 'firebase-admin';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
-import { CreateNonValidatedUserDto } from 'src/users/dto/create-non-validated-user.dto';
 
 @Injectable()
 export class FirebaseAuth {
@@ -22,24 +21,17 @@ export class FirebaseAuth {
    * @param userParams
    */
   async createUser(userParams: CreateUserDto) {
+    console.log(
+      userParams.name,
+      userParams.email,
+      userParams.password,
+      userParams.cellPhone,
+    );
     return this.firebaseApp.auth().createUser({
       email: userParams.email,
       password: userParams.password || randomUUID(),
       displayName: userParams.name,
       phoneNumber: userParams.cellPhone,
-    });
-  }
-
-  async createNonValidatedUser(userParams: CreateNonValidatedUserDto) {
-    return this.firebaseApp.auth().createUser({
-      email: userParams.email,
-      password: userParams.password || randomUUID(),
-      displayName: userParams.name,
-      phoneNumber: userParams.cellPhone,
-      validated: userParams.validated,
-      role: userParams.role,
-      affiliation: userParams.affiliation,
-      community: userParams.community,
     });
   }
 
