@@ -5,7 +5,6 @@ import { FirebaseAuth } from '../commons/auth/firebase';
 import { MicrosserviceException } from '../commons/exceptions/MicrosserviceException';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User, UserDocument, UserEnum } from './entities/user.entity';
-import { CreateNonValidatedUserDto } from './dto/create-non-validated-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -54,17 +53,14 @@ export class UsersService {
     }
   }
 
-  async createNonValidated(
-    createNonValidatedUserDto: CreateNonValidatedUserDto,
-    userType: UserEnum,
-  ): Promise<CreateNonValidatedUserDto> {
+  async createNonValidated(createUserDto: CreateUserDto): Promise<string> {
     const user = new this.userModel({
-      ...createNonValidatedUserDto,
-      type: userType,
+      ...createUserDto,
     });
 
     try {
-      return createNonValidatedUserDto;
+      const result = await user.save();
+      return result.id;
     } catch (error) {
       if (error.name === 'MongoError') {
         if (error.message.includes('duplicate key')) {
@@ -74,8 +70,6 @@ export class UsersService {
             HttpStatus.CONFLICT,
           );
         }
-
-        await this.firebaseInstance.deleteUser(user.uid).catch(null);
       } else {
         throw new MicrosserviceException(error.message, HttpStatus.BAD_REQUEST);
       }
@@ -94,8 +88,8 @@ export class UsersService {
     return user;
   }
 
-  async getNonValidatedUsers(validated: boolean) {
-    const NonValidatedUsers = await this.userModel.find({ validated });
+  async getNonValidatedUsers() {
+    const NonValidatedUsers = await this.userModel.find({ validated: false });
 
     if (!NonValidatedUsers)
       throw new MicrosserviceException(
@@ -106,43 +100,33 @@ export class UsersService {
     return NonValidatedUsers;
   }
 
-  // TENTANDO FAZER A FUNÇÃO DE FINALIZAR O CADASTRO DO USUÁRIO
+  async validateUser(email: string) {
+    const user = await this.userModel.findOne({ email: email });
+    user.validated = true;
+    try {
+      const firebaseUser = await this.firebaseInstance.createUser(user);
 
-  // async validatingUser(
-  //   CreateNonValidatedUserDto: CreateNonValidatedUserDto,
-  //   email: string,
-  //   userType: UserEnum,
-  // ){
+      user.uid = firebaseUser.uid;
 
-  //   const user = this.getUserByEmail(email);
+      await this.firebaseInstance.setUserRole(user.uid, UserEnum[user.type]);
 
-  //   try {
-  //     const firebaseUser = await this.firebaseInstance.createNonValidatedUser(
-  //       CreateNonValidatedUserDto,
-  //     );
+      const result = await user.save();
 
-  //     user.uid = firebaseUser.uid;
+      return result.id;
+    } catch (error) {
+      if (error.name === 'MongoError') {
+        if (error.message.includes('duplicate key')) {
+          const atributeKey = Object.keys(error.keyValue)[0];
+          throw new MicrosserviceException(
+            `${atributeKey} já cadastrado!`,
+            HttpStatus.CONFLICT,
+          );
+        }
 
-  //     await this.firebaseInstance.setUserRole(user.uid, UserEnum[userType]);
-
-  //     const result = await user.save();
-
-  //     return result.id;
-  //   } catch (error) {
-  //     if (error.name === 'MongoError') {
-  //       if (error.message.includes('duplicate key')) {
-  //         const atributeKey = Object.keys(error.keyValue)[0];
-  //         throw new MicrosserviceException(
-  //           `${atributeKey} já cadastrado!`,
-  //           HttpStatus.CONFLICT,
-  //         );
-  //       }
-
-  //       await this.firebaseInstance.deleteUser(user.uid).catch(null);
-  //     } else {
-  //       throw new MicrosserviceException(error.message, HttpStatus.BAD_REQUEST);
-  //     }
-  //   }
-  // }
-
+        await this.firebaseInstance.deleteUser(user.uid).catch(null);
+      } else {
+        throw new MicrosserviceException(error.message, HttpStatus.BAD_REQUEST);
+      }
+    }
+  }
 }

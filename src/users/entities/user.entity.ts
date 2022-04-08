@@ -18,6 +18,9 @@ export class User {
   @Prop()
   uid: string;
 
+  @Prop({ required: true })
+  password: string;
+
   @Prop({ required: true, unique: true })
   cellPhone: string;
 
