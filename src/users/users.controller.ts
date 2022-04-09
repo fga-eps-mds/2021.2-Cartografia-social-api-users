@@ -52,4 +52,10 @@ export class UsersController {
     const response = await this.usersService.validateUser(data.email);
     return response;
   }
+
+  @Post('removeUser')
+  async removeUser(@Payload() data) {
+    const response = await this.usersService.removeUser(data.email);
+    return response;
+  }
 }

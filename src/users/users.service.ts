@@ -131,4 +131,12 @@ export class UsersService {
       }
     }
   }
+
+  async removeUser(email: string) {
+    try {
+      await this.userModel.deleteOne({ email: email });
+    } catch (error) {
+      throw new MicrosserviceException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
 }
