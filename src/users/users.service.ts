@@ -58,6 +58,8 @@ export class UsersService {
       ...createUserDto,
     });
 
+    user.validated = false;
+
     try {
       const result = await user.save();
       return result.id;
