@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Cartografia</title>
+    <link rel="stylesheet" href="styles/index.css">
+  </head>
+  <body>
+      <table>
+          <tr>
+            <th>Nome</th>
+            <th>Email</th>
+          </tr>
+            <% users.forEach((user) => { %>
+            <tr>
+                <td><%= user.name %></td>
+                <td><%= user.email %></td>
+            </tr>
+            <%  }) %>
+      </table>
+  </body>
+</html>
