@@ -95,35 +95,49 @@
           <td data-title="Nome">
             <%= user.name %>
           </td>
-          <td data-title="Email">
+          <td data-title="Email", id="email">
             <%= user.email %>
           </td>
           <td data-title="Celular">
             <%= user.cellPhone %>
           </td>
-          <td data-title="Perfil">
-            <%= user.type %>
-          </td>
+          <%if (user.type=='RESEARCHER') { %>
 
-          <%if (user.type=='RESEARCHER' ) { %>
+            <td data-title="Perfil">
+                pesquisador
+            </td>
 
             <td data-title="Afiliacao">
               <%= user.affiliation %>
             </td>
 
-            <% } else { %>
+            <% } else if (user.type=='COMMUNITY_MEMBER') { %>
 
-              <td data-title="community">
+              <td data-title="Perfil">
+                membro de comunidade
+              </td>
+
+              <td data-title="Afiliacao">
                 <%= user.community %>
               </td>
+
+              <% } else {%>
+
+                <td data-title="Perfil">
+                  <%= user.type %>
+                </td>
+  
+                <td data-title="Afiliacao">
+                  <%= user.community %>
+                </td>
 
               <% } %>
 
                 <td>
-                  <button class="aceitar" onclick="validateUser(user.email)">Aceitar</button>
+                  <button class="aceitar" onclick="">Aceitar</button>
                 </td>
                 <td>
-                  <button class="recusar" onclick="removeUser(user.email)">Recusar</button>
+                  <button class="recusar" onclick="">Recusar</button>
                 </td>
         </tr>
         <% }) %>

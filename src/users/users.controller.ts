@@ -41,7 +41,7 @@ export class UsersController {
     return response.toJSON();
   }
 
-  @Get('nonValidatedUsers')
+  @Get('selecionarUsuarios')
   @Render('index')
   async getNonValidatedUsersData() {
     const response = await this.usersService.getNonValidatedUsers();
