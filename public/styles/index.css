@@ -203,13 +203,17 @@ table tbody tr td button:focus {
     text-align: right;
   }
 
+  table tbody tr td p{
+    display: block;
+    overflow: hidden;
+  }
+  
   table tbody tr td:before {
     content: attr(data-title);
-    position: absolute;
-    left: 15px;
     display: block;
     font-weight: 600;
     font-size: 1em;
+    float: left;
   }
 
   table {

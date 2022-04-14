@@ -7,7 +7,6 @@ export enum UserEnum {
   RESEARCHER,
   COMMUNITY_MEMBER,
   ADMIN,
-  NON_VALIDATED,
 }
 
 @Schema()
@@ -37,7 +36,7 @@ export class User {
   validated: boolean;
 
   @Prop({ required: false })
-  justification: string;
+  role: string;
 
   @Prop({ required: false })
   affiliation: string;

@@ -1,27 +1,3 @@
-<!--
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <title>Cartografia</title>
-    <link rel="stylesheet" href="styles/index.css">
-  </head>
-  <body>
-      <table>
-          <tr>
-            <th>Nome</th>
-            <th>Email</th>
-          </tr>
-            <% users.forEach((user) => { %>
-            <tr>
-                <td><%= user.name %></td>
-                <td><%= user.email %></td>
-            </tr>
-            <%  }) %>
-      </table>
-  </body>
-</html>-->
-
 <!DOCTYPE html>
 <html lang="pt">
 
@@ -84,12 +60,11 @@
           <th>Email</th>
           <th>Celular</th>
           <th>Perfil</th>
-          <th>Afiliação</th>
+          <th>Afiliação/Comunidade</th>
           <th>Ação</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
           <% users.forEach((user)=> { %>
         <tr>
           <td data-title="Nome">
@@ -104,45 +79,30 @@
           <%if (user.type=='RESEARCHER') { %>
 
             <td data-title="Perfil">
-                pesquisador
+                Pesquisador
             </td>
 
             <td data-title="Afiliacao">
               <%= user.affiliation %>
             </td>
 
-            <% } else if (user.type=='COMMUNITY_MEMBER') { %>
-
-              <td data-title="Perfil">
-                membro de comunidade
-              </td>
-
-              <td data-title="Afiliacao">
-                <%= user.community %>
-              </td>
-
-              <% } else {%>
-
+          <% } else if (user.type=='COMMUNITY_MEMBER') { %>
                 <td data-title="Perfil">
-                  <%= user.type %>
-                </td>
-  
-                <td data-title="Afiliacao">
-                  <%= user.community %>
+                  Membro de comunidade
                 </td>
 
-              <% } %>
-
+                <td data-title="Comunidade">
+                  <p><%= user.community %> <b>Função: <b> <%= user.role %></p>
+                </td>
+          <% } %>
                 <td>
                   <button class="aceitar" onclick="">Aceitar</button>
                 </td>
                 <td>
                   <button class="recusar" onclick="">Recusar</button>
                 </td>
-        </tr>
-        <% }) %>
           </tr>
-
+          <% }) %>
       </tbody>
     </table>
   </main>
