@@ -1,6 +1,7 @@
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { randomUUID } from 'crypto';
+import { MailSender } from '../../src/providers/mail/sender';
 import { FirebaseAuth } from '../../src/commons/auth/firebase';
 import { User } from '../../src/users/entities/user.entity';
 import { UsersController } from '../../src/users/users.controller';
@@ -33,6 +34,12 @@ describe('UsersController', () => {
             createUser: jest.fn(() => ({ uid: '123' })),
             setUserRole: jest.fn(),
             deleteUser: jest.fn(),
+          },
+        },
+        {
+          provide: MailSender,
+          useValue: {
+            sendMail: jest.fn(),
           },
         },
       ],
