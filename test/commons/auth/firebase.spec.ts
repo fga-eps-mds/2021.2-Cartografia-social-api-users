@@ -61,7 +61,7 @@ describe('FirebaseAuth', () => {
     const firebaseAuth = module.get<FirebaseAuth>(FirebaseAuth);
 
     const result = await firebaseAuth.createUser({
-      type:"RESEARCHER",
+      type: 'RESEARCHER',
       email: 'email@gmail.com',
       name: 'Example',
       cellPhone: '61992989898',
@@ -76,7 +76,7 @@ describe('FirebaseAuth', () => {
     const firebaseAuth = module.get<FirebaseAuth>(FirebaseAuth);
 
     const result = await firebaseAuth.createUser({
-      type:"COMMUNITY_MEMBER",
+      type: 'COMMUNITY_MEMBER',
       email: 'email@gmail.com',
       name: 'Example',
       cellPhone: '61992989898',
