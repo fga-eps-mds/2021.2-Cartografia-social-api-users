@@ -2,6 +2,7 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { FirebaseAuth } from '../commons/auth/firebase';
+import { MailSender } from '../providers/mail/sender';
 import { MicrosserviceException } from '../commons/exceptions/MicrosserviceException';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User, UserDocument, UserEnum } from './entities/user.entity';
@@ -13,6 +14,7 @@ export class UsersService {
     private userModel: Model<UserDocument>,
 
     private firebaseInstance: FirebaseAuth,
+    private mailInstance: MailSender,
   ) {}
 
   async create(
@@ -113,6 +115,8 @@ export class UsersService {
       await this.firebaseInstance.setUserRole(user.uid, UserEnum[user.type]);
 
       const result = await user.save();
+
+      await this.mailInstance.sendMail(email);
 
       return result.id;
     } catch (error) {
