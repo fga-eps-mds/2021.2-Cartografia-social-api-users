@@ -4,6 +4,7 @@ import { UsersController } from './users.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './entities/user.entity';
 import { FirebaseAuth } from 'src/commons/auth/firebase';
+import { MailSender } from 'src/providers/mail/sender';
 import { ConfigService } from 'src/config/configuration';
 
 @Module({
@@ -14,6 +15,7 @@ import { ConfigService } from 'src/config/configuration';
   providers: [
     UsersService,
     FirebaseAuth,
+    MailSender,
     {
       provide: 'CONFIG',
       useClass: ConfigService,

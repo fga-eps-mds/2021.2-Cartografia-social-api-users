@@ -3,4 +3,9 @@ export class CreateUserDto {
   email: string;
   cellPhone: string;
   password?: string;
+  validated?: boolean;
+  role?: string;
+  affiliation?: string;
+  community?: string;
+  type: string;
 }

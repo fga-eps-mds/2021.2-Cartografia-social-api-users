@@ -10,6 +10,7 @@ services:
     command: npm run start:debug
     ports: 
       - 9226:9226
+      - 9880:9880
     env_file:
       - .env
     networks:
@@ -22,6 +23,9 @@ services:
     restart: always
     hostname: user
     command: npm run start:dev
+    ports: 
+      - 9226:9226
+      - 9880:9880
     env_file:
       - .env
     networks:
@@ -35,6 +39,9 @@ services:
     restart: always
     hostname: user
     command: npm run start:prod
+    ports: 
+      - 9226:9226
+      - 9880:9880
     env_file:
       - .env
     networks:

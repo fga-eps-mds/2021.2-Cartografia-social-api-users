@@ -3,6 +3,7 @@ import { Test } from '@nestjs/testing';
 import { randomUUID } from 'crypto';
 import { MongoError } from 'mongodb';
 import { FirebaseAuth } from '../../src/commons/auth/firebase';
+import { MailSender } from '../../src/providers/mail/sender';
 import { MicrosserviceException } from '../../src/commons/exceptions/MicrosserviceException';
 import { User, UserEnum } from '../../src/users/entities/user.entity';
 import { UsersService } from '../../src/users/users.service';
@@ -26,9 +27,14 @@ describe('UsersService', () => {
     deleteUser: jest.fn(),
   };
 
+  const defaultMailSenderImplementation = {
+    sendMail: jest.fn(),
+  };
+
   const dynamicModule = (
     fn: any,
     firebaseFn: any = defaultFirebaseImplementation,
+    MailSenderFn: any = defaultMailSenderImplementation,
   ) => {
     return Test.createTestingModule({
       providers: [
@@ -40,6 +46,10 @@ describe('UsersService', () => {
         {
           provide: FirebaseAuth,
           useValue: firebaseFn,
+        },
+        {
+          provide: MailSender,
+          useValue: MailSenderFn,
         },
       ],
     }).compile();
@@ -61,6 +71,7 @@ describe('UsersService', () => {
     expect(
       await service.create(
         {
+          type: 'RESEARCHER',
           email: 'email@gmail.com',
           name: 'Example',
           cellPhone: '61992989898',
@@ -87,6 +98,7 @@ describe('UsersService', () => {
     try {
       await service.create(
         {
+          type: 'COMMUNITY_MEMBER',
           email: 'email@gmail.com',
           name: 'Example',
           cellPhone: '61992989898',
