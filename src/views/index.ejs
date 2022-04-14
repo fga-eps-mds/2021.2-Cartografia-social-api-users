@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="initial-scale=1.0, maximum-scale=2.0, width=device-width" />
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;1,400&display=swap"
+    rel="stylesheet">
+  <link href="styles/index.css" rel="stylesheet">
+  <link rel="icon" href="img/logo.png">
+  <title>Nova Cartografia Social</title>
+</head>
+
+<body>
+
+  <header>
+    <div class="header">
+
+      <!--Content before waves-->
+      <div class="inner-header flex">
+
+        <img src="img/logo.png" class="logo" alt="Logo Nova Cartografia Social">
+
+        <h1>Nova Cartografia Social</h1>
+      </div>
+
+      <!--Waves Container-->
+      <div>
+        <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+          viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+          <defs>
+            <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+          </defs>
+          <g class="parallax">
+            <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7" />
+            <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)" />
+            <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)" />
+            <use xlink:href="#gentle-wave" x="48" y="7" fill="#fff" />
+          </g>
+        </svg>
+      </div>
+      <!--Waves end-->
+
+    </div>
+    <!--Header ends-->
+
+  </header>
+
+  <main>
+    <div class="titulo-secundario">
+      <h2>Análise de Solicitação de Cadastros</h2>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Email</th>
+          <th>Celular</th>
+          <th>Perfil</th>
+          <th>Afiliação/Comunidade</th>
+          <th>Ação</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% users.forEach((user)=> { %>
+          <tr>
+            <td data-title="Nome">
+              <%= user.name %>
+            </td>
+            <td data-title="Email" , id="email">
+              <%= user.email %>
+            </td>
+            <td data-title="Celular">
+              <%= user.cellPhone %>
+            </td>
+            <%if (user.type=='RESEARCHER' ) { %>
+
+              <td data-title="Perfil">
+                Pesquisador
+              </td>
+
+              <td data-title="Afiliacao">
+                <%= user.affiliation %>
+              </td>
+
+            <% } else if (user.type=='COMMUNITY_MEMBER' ) { %>
+                <td data-title="Perfil">
+                  Membro de comunidade
+                </td>
+
+                <td data-title="Comunidade">
+                  <p>
+                    <%= user.community %> <b>Função: <b><%= user.role %>
+                  </p>
+                </td>
+              <% } %>
+
+              <% ['aceitar', 'recusar' ].forEach((text)=> { %>
+                <td>
+                  <button type="submit" data-email="<%= user.email %>" class="<%= text %>">
+                    <%= text %>
+                  </button>
+                </td>
+              <% }) %>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </main>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="scripts/index.js"></script>
+</body>
+
+</html>

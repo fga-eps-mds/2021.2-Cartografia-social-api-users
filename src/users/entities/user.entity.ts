@@ -7,7 +7,6 @@ export enum UserEnum {
   RESEARCHER,
   COMMUNITY_MEMBER,
   ADMIN,
-  NON_VALIDATED,
 }
 
 @Schema()
@@ -17,6 +16,9 @@ export class User {
 
   @Prop()
   uid: string;
+
+  @Prop({ required: true })
+  password: string;
 
   @Prop({ required: true, unique: true })
   cellPhone: string;
@@ -30,8 +32,11 @@ export class User {
   @Prop({ enum: UserEnum, required: true })
   type: string;
 
+  @Prop({ required: true })
+  validated: boolean;
+
   @Prop({ required: false })
-  justification: string;
+  role: string;
 
   @Prop({ required: false })
   affiliation: string;
