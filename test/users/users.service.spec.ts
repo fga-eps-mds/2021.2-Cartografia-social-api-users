@@ -61,6 +61,7 @@ describe('UsersService', () => {
     expect(
       await service.create(
         {
+          type:"RESEARCHER",
           email: 'email@gmail.com',
           name: 'Example',
           cellPhone: '61992989898',
@@ -87,6 +88,7 @@ describe('UsersService', () => {
     try {
       await service.create(
         {
+          type:"COMMUNITY_MEMBER",
           email: 'email@gmail.com',
           name: 'Example',
           cellPhone: '61992989898',

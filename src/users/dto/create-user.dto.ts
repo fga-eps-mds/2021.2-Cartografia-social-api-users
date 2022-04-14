@@ -3,7 +3,7 @@ export class CreateUserDto {
   email: string;
   cellPhone: string;
   password?: string;
-  validated: boolean;
+  validated?: boolean;
   role?: string;
   affiliation?: string;
   community?: string;

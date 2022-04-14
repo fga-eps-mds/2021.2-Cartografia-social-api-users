@@ -55,6 +55,7 @@ describe('UsersController', () => {
 
     expect(
       await controller.createCommunityMember({
+        type:"COMMUNITY_MEMBER",
         email: 'email@gmail.com',
         name: 'Example',
         cellPhone: '61992989898',
@@ -72,6 +73,7 @@ describe('UsersController', () => {
 
     expect(
       await controller.createResearcher({
+        type:"RESEARCHER",
         email: 'email@gmail.com',
         name: 'Example',
         cellPhone: '61992989898',

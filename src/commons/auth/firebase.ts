@@ -21,12 +21,6 @@ export class FirebaseAuth {
    * @param userParams
    */
   async createUser(userParams: CreateUserDto) {
-    console.log(
-      userParams.name,
-      userParams.email,
-      userParams.password,
-      userParams.cellPhone,
-    );
     return this.firebaseApp.auth().createUser({
       email: userParams.email,
       password: userParams.password || randomUUID(),
