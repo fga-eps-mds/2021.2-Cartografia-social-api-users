@@ -27,6 +27,10 @@ export class ConfigService {
       authProviderX509CertUrl: process.env.FIREBASE_AUTH_PROVIDER,
       clientX509CertUrl: process.env.FIREBASE_CLIENT_X509,
     };
+    this.envConfig.mail = {
+      user: process.env.MAIL_USER,
+      password: process.env.MAIL_PASSWORD,
+    };
   }
 
   get(key: string): any {
