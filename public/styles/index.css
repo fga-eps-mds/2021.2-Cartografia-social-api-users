@@ -167,6 +167,10 @@ table tbody tr td button {
   width: auto;
 }
 
+button::first-letter {
+  text-transform:capitalize;
+}
+
 table tbody tr td button {
   background: #4caf50;
   border: none;
