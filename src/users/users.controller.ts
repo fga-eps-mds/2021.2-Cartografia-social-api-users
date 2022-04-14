@@ -18,10 +18,11 @@ export class UsersController {
     return { id };
   }
 
+  @MessagePattern('createUser')
   @Post('createUser')
   async createUser(@Payload() CreateUserDto: CreateUserDto) {
     const id = await this.usersService.createNonValidated(CreateUserDto);
-    return id;
+    return { id };
   }
 
   @MessagePattern('createCommunityMember')
