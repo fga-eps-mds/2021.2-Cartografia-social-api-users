@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Render } from '@nestjs/common';
+import { Controller, Get, Post, Render, Res } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -47,6 +47,11 @@ export class UsersController {
   async getNonValidatedUsersData() {
     const response = await this.usersService.getNonValidatedUsers();
     return { users: response };
+  }
+
+  @Get('')
+  async root(@Res() res) {
+    return res.redirect('/selecionarUsuarios');
   }
 
   @Post('validateUser')
