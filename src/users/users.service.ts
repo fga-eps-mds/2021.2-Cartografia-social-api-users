@@ -112,7 +112,7 @@ export class UsersService {
 
       user.uid = firebaseUser.uid;
 
-      await this.firebaseInstance.setUserRole(user.uid, UserEnum[user.type]);
+      await this.firebaseInstance.setUserRole(user.uid, user.type);
 
       const result = await user.save();
 
