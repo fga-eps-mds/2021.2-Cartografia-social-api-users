@@ -24,7 +24,7 @@ describe('UsersService', () => {
   const defaultFirebaseImplementation = {
     createUser: jest.fn(() => ({ uid: '123' })),
     setUserRole: jest.fn(),
-    deleteUser: jest.fn(),
+    deleteUser: jest.fn(() => ({ catch: jest.fn() })),
   };
 
   const defaultMailSenderImplementation = {
@@ -214,18 +214,57 @@ describe('UsersService', () => {
 
   it('should not validate a duplicated user', async () => {
     const email = 'email@gmail.com';
-    const module = await dynamicModule(function (dto) {
-      this.data = dto;
-      this.save = () => {
-        throw new MongoError({
-          keyValue: { email },
-          message: 'duplicate key',
-        });
-      };
+    const module = await dynamicModule({
+      findOne: () => ({
+        email: email,
+        name: 'Example',
+        cellPhone: '61992989898',
+        save: () => {
+          throw new MongoError({
+            keyValue: { email },
+            message: 'duplicate key',
+          });
+        },
+      }),
     });
 
     service = module.get<UsersService>(UsersService);
 
-    await expect(service.validateUser(email)).rejects.toThrowError();
+    await expect(service.validateUser(email)).rejects.toThrowError(
+      'já cadastrado!',
+    );
+  });
+
+  it('should delete firebase user with mongo error', async () => {
+    const email = 'email@gmail.com';
+    const error = new MongoError({
+      keyValue: { email },
+      message: 'other non catch error ',
+    });
+    const module = await dynamicModule({
+      findOne: () => ({
+        email: email,
+        name: 'Example',
+        cellPhone: '61992989898',
+        save: () => {
+          throw error;
+        },
+      }),
+    });
+
+    service = module.get<UsersService>(UsersService);
+
+    await expect(service.validateUser(email)).rejects.toThrowError(error);
+  });
+
+  it('can delete a user', async () => {
+    const email = 'email@gmail.com';
+    const module = await dynamicModule({
+      deleteOne: jest.fn(),
+    });
+
+    service = module.get<UsersService>(UsersService);
+
+    await expect(service.removeUser(email)).resolves.toBe(undefined);
   });
 });
