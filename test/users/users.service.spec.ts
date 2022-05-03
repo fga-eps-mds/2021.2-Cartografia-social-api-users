@@ -24,7 +24,7 @@ describe('UsersService', () => {
   const defaultFirebaseImplementation = {
     createUser: jest.fn(() => ({ uid: '123' })),
     setUserRole: jest.fn(),
-    deleteUser: jest.fn(),
+    deleteUser: jest.fn(() => ({ catch: jest.fn() })),
   };
 
   const defaultMailSenderImplementation = {
@@ -141,5 +141,130 @@ describe('UsersService', () => {
     } catch (error) {
       expect(error).toBeInstanceOf(MicrosserviceException);
     }
+  });
+
+  it('should create a non valid user', async () => {
+    const module = await dynamicModule(mockPointModel);
+
+    service = module.get<UsersService>(UsersService);
+    const user = {
+      type: 'RESEARCHER',
+      email: 'email@gmail.com',
+      name: 'Example',
+      cellPhone: '61992989898',
+      password: password,
+    };
+    await expect(service.createNonValidated(user)).resolves.toBe(id);
+  });
+
+  it('should not create a non valid duplicated user', async () => {
+    const module = await dynamicModule(function (dto) {
+      this.data = dto;
+      this.save = () => {
+        throw new MongoError({
+          keyValue: { email: 'email@gmail.com' },
+          message: 'duplicate key',
+        });
+      };
+    });
+
+    service = module.get<UsersService>(UsersService);
+
+    await expect(
+      service.createNonValidated({
+        type: 'COMMUNITY_MEMBER',
+        email: 'email@gmail.com',
+        name: 'Example',
+        cellPhone: '61992989898',
+        password: password,
+      }),
+    ).rejects.toThrowError();
+  });
+
+  it('can get all non valid users', async () => {
+    const user = {
+      email: 'email@gmail.com',
+      name: 'Example',
+      cellPhone: '61992989898',
+    };
+    const module = await dynamicModule({
+      find: () => [user],
+    });
+
+    service = module.get<UsersService>(UsersService);
+
+    expect(service.getNonValidatedUsers()).resolves.toStrictEqual([user]);
+  });
+
+  it('can validate user', async () => {
+    const email = 'email@gmail.com';
+    const module = await dynamicModule({
+      findOne: () => ({
+        email: email,
+        name: 'Example',
+        cellPhone: '61992989898',
+        save: () => ({ id }),
+      }),
+    });
+
+    service = module.get<UsersService>(UsersService);
+
+    await expect(service.validateUser(email)).resolves.toBe(id);
+  });
+
+  it('should not validate a duplicated user', async () => {
+    const email = 'email@gmail.com';
+    const module = await dynamicModule({
+      findOne: () => ({
+        email: email,
+        name: 'Example',
+        cellPhone: '61992989898',
+        save: () => {
+          throw new MongoError({
+            keyValue: { email },
+            message: 'duplicate key',
+          });
+        },
+      }),
+    });
+
+    service = module.get<UsersService>(UsersService);
+
+    await expect(service.validateUser(email)).rejects.toThrowError(
+      'já cadastrado!',
+    );
+  });
+
+  it('should delete firebase user with mongo error', async () => {
+    const email = 'email@gmail.com';
+    const error = new MongoError({
+      keyValue: { email },
+      message: 'other non catch error ',
+    });
+    const module = await dynamicModule({
+      findOne: () => ({
+        email: email,
+        name: 'Example',
+        cellPhone: '61992989898',
+        save: () => {
+          throw error;
+        },
+      }),
+    });
+
+    service = module.get<UsersService>(UsersService);
+
+    await expect(service.validateUser(email)).rejects.toThrowError(error);
+  });
+
+  it('can delete a user', async () => {
+    const email = 'email@gmail.com';
+    const module = await dynamicModule({
+      deleteOne: jest.fn(),
+    });
+
+    service = module.get<UsersService>(UsersService);
+
+    await expect(service.removeUser(email)).resolves.toBe(undefined);
   });
 });

@@ -130,6 +130,7 @@ export class UsersService {
         }
 
         await this.firebaseInstance.deleteUser(user.uid).catch(null);
+        throw error;
       } else {
         throw new MicrosserviceException(error.message, HttpStatus.BAD_REQUEST);
       }
