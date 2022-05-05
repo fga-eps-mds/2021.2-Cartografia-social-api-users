@@ -1,6 +1,7 @@
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { randomUUID } from 'crypto';
+import { MailSender } from '../../src/providers/mail/sender';
 import { FirebaseAuth } from '../../src/commons/auth/firebase';
 import { User } from '../../src/users/entities/user.entity';
 import { UsersController } from '../../src/users/users.controller';
@@ -35,6 +36,12 @@ describe('UsersController', () => {
             deleteUser: jest.fn(),
           },
         },
+        {
+          provide: MailSender,
+          useValue: {
+            sendMail: jest.fn(),
+          },
+        },
       ],
     }).compile();
   };
@@ -55,6 +62,7 @@ describe('UsersController', () => {
 
     expect(
       await controller.createCommunityMember({
+        type: 'COMMUNITY_MEMBER',
         email: 'email@gmail.com',
         name: 'Example',
         cellPhone: '61992989898',
@@ -72,6 +80,7 @@ describe('UsersController', () => {
 
     expect(
       await controller.createResearcher({
+        type: 'RESEARCHER',
         email: 'email@gmail.com',
         name: 'Example',
         cellPhone: '61992989898',

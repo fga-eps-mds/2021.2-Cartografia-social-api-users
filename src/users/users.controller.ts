@@ -1,4 +1,4 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Post } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -18,6 +18,13 @@ export class UsersController {
     return { id };
   }
 
+  @MessagePattern('createUser')
+  @Post('createUser')
+  async createUser(@Payload() CreateUserDto: CreateUserDto) {
+    const id = await this.usersService.createNonValidated(CreateUserDto);
+    return { id };
+  }
+
   @MessagePattern('createCommunityMember')
   async createCommunityMember(@Payload() createUserDto: CreateUserDto) {
     const id = await this.usersService.create(
@@ -33,5 +40,23 @@ export class UsersController {
     const response = await this.usersService.getUserByEmail(email);
 
     return response.toJSON();
+  }
+
+  @MessagePattern('getNonValidatedUsersData')
+  async getNonValidatedUsersData() {
+    const response = await this.usersService.getNonValidatedUsers();
+    return response;
+  }
+
+  @MessagePattern('validateUser')
+  async validateUser(@Payload() data) {
+    const response = await this.usersService.validateUser(data.email);
+    return response;
+  }
+
+  @MessagePattern('removeUser')
+  async removeUser(@Payload() data) {
+    const response = await this.usersService.removeUser(data.email);
+    return response;
   }
 }
